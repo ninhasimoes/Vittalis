@@ -105,18 +105,11 @@ textarea:focus-visible,
     transition: 0.2s;
     position: relative;
     overflow: hidden;
-    /* Troque 'banner-home-bg.jpg' pelo nome do arquivo da sua imagem,
-       colocado dentro da pasta vittalis-site. Proporções recomendadas
-       logo abaixo, no comentário da regra .banner-vittalis::before. */
     background-image: url('banner-home-bg.jpg');
     background-size: cover;
     background-position: center;
 }
-/* Gradiente por cima da imagem: 100% transparente embaixo (onde fica o
-   botão) até ~80% de opacidade em cima (onde fica o texto), garantindo
-   que o texto branco continue legível por cima de qualquer foto.
-   Imagem recomendada: proporção ~1.9:1 (ex: 750x400px ou 1500x800px,
-   já pensando em telas de alta resolução), formato JPG ou PNG. */
+
 .banner-vittalis::before {
     content: '';
     position: absolute;

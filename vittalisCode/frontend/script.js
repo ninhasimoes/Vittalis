@@ -1,36 +1,9 @@
-// ==========================================
-// CONFIGURAÇÕES E ESTADO
-// ==========================================
-// A maior parte dos dados (metas, diário, perfil etc.) fica só no
-// localStorage do navegador, sem back-end. A exceção é a recomendação
-// por IA: ela chama o back-end em Python (pasta /backend), que por sua
-// vez fala com o Gemini. Por isso essa URL existe: enquanto você testa
-// no seu computador, "127.0.0.1" (o próprio computador) funciona, porque
-// o back-end está rodando localmente. Mas isso só funciona PRA VOCÊ.
-//
-// Se você publicar o front-end como um link público para outras pessoas
-// acessarem, o navegador de cada uma delas vai tentar chamar "127.0.0.1"
-// DELAS, não o seu computador — e a recomendação por IA vai falhar pra
-// todo mundo, mesmo com o back-end rodando no seu PC ligado 24h.
-// Não existe jeito de contornar isso: um serviço num link público
-// precisa de um back-end hospedado num servidor que qualquer pessoa
-// consiga alcançar pela internet (ex.: Render, Railway, Fly.io), não no
-// seu computador pessoal.
-//
-// Quando isso acontecer, troque a linha abaixo pela URL pública do seu
-// back-end (algo como "https://vittalis-api.onrender.com") — é a ÚNICA
-// mudança de código necessária para o app funcionar em outra máquina.
-const API_BASE_URL = 'http://127.0.0.1:8000';
+const API_BASE_URL ='https://vittalis-dgqg.onrender.com';
 
 let usuarioPremiumAtivo = localStorage.getItem('vittalis_premium') === 'true';
 let diaDiarioSelecionado = '';
 
-// ==========================================
-// HELPERS GERAIS (leitura segura de dados / escape de texto)
-// ==========================================
 
-// Faz JSON.parse sem derrubar a aplicação se o valor salvo estiver corrompido
-// (ex.: alguém editou o localStorage manualmente e quebrou o JSON).
 function parseJSONSeguro(texto) {
     try {
         return JSON.parse(texto);
@@ -40,16 +13,14 @@ function parseJSONSeguro(texto) {
     }
 }
 
-// Escapa texto do usuário antes de inserir via innerHTML, evitando que
-// caracteres como < > " quebrem o layout ou injetem HTML indevido.
+
 function escapeHTML(texto) {
     const div = document.createElement('div');
     div.textContent = texto ?? '';
     return div.innerHTML;
 }
 
-// Tenta salvar no localStorage e avisa (em vez de falhar em silêncio) se o
-// navegador bloquear a gravação (ex.: modo privado/anônimo, quota cheia).
+
 function salvarNoStorage(chave, valorObjeto) {
     try {
         localStorage.setItem(chave, JSON.stringify(valorObjeto));
@@ -64,16 +35,13 @@ function assinarPremium() {
     localStorage.setItem('vittalis_usuario_premium', 'true');
     usuarioPremiumAtivo = true;
     
-    // Adiciona o tema verde escuro
+    
     document.body.classList.add('tema-premium');
     
     navegarPara('screen-diario'); // ou para onde desejar após assinar
 }
 
-// Hospedagens como a Netlify diferenciam maiúsculas de minúsculas nos nomes
-// de arquivo (o Windows/Mac, usados no desenvolvimento, não diferenciam) —
-// por isso, se a imagem esperada falhar, tentamos variações de nome antes
-// de desistir e esconder o quadro de imagem quebrada.
+
 function tratarErroImagemVittalis(imgElemento, candidatos, indice) {
     if (indice >= candidatos.length) {
         imgElemento.onerror = null;
@@ -85,12 +53,7 @@ function tratarErroImagemVittalis(imgElemento, candidatos, indice) {
 }
 
 window.onload = function () {
-    // Protótipo de demonstração: cada carregamento de página começa "zerado",
-    // como se fosse a primeira visita de uma pessoa nova. Isso evita que dados
-    // de um teste anterior (Índice Viva, metas, diário, plano Premium etc.)
-    // apareçam para a próxima pessoa que testar o app no mesmo navegador.
-    // Exceção: os campos do formulário "Sou Cliente Unimed" ficam salvos de
-    // propósito, mesmo se a pessoa fechar e voltar sem terminar de preencher.
+    
     const chavesParaManter = ['vittalis_draft_valCarteirinha', 'vittalis_draft_valNasc', 'vittalis_draft_valCpf'];
     Object.keys(localStorage)
         .filter(chave => chave.startsWith('vittalis_') && !chavesParaManter.includes(chave))
@@ -111,7 +74,7 @@ window.onload = function () {
     carregarDadosPessoais();
     verificarAvisoPersonalizacao();
 
-    // Mantém a última mensagem de insight salva ao recarregar a página
+    
     const savedInsight = localStorage.getItem('vittalis_last_insight');
     if (savedInsight && document.getElementById('dynamic-insight-text')) {
         document.getElementById('dynamic-insight-text').innerText = savedInsight;
@@ -121,8 +84,7 @@ window.onload = function () {
 function verificarAvisoPersonalizacao() {
     const dados = parseJSONSeguro(localStorage.getItem('vittalis_dados_pessoais'));
 
-    // Banner clicável (agora na tela de Metas): fica visível sempre que
-    // faltar peso/altura, sem interromper a pessoa com um pop-up.
+    
     const banner = document.getElementById('banner-completar-dados');
     if (banner) banner.style.display = (usuarioPremiumAtivo && (!dados || !dados.peso)) ? 'block' : 'none';
 }
@@ -138,8 +100,7 @@ document.addEventListener('keydown', function (e) {
         });
         return;
     }
-    // Enter/Espaço ativam elementos clicáveis (divs com role="button")
-    // do mesmo jeito que ativariam um <button> nativo
+    
     if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"]')) {
         e.preventDefault();
         e.target.click();
@@ -172,16 +133,12 @@ function carregarPerfil() {
     if (elHome) elHome.innerText = saudacao;
     if (elPremium) elPremium.innerText = saudacao;
 
-    // Por escolha de design, os campos do formulário "Meu Perfil" começam
-    // sempre em branco ao entrar na tela (não são pré-preenchidos com dados
-    // salvos anteriormente), mesmo já existindo um perfil salvo.
 
     const linkCancelar = document.getElementById('link-cancelar-premium');
     if (linkCancelar) linkCancelar.style.display = usuarioPremiumAtivo ? 'block' : 'none';
 }
 
-// Permite voltar ao plano gratuito (útil tanto como funcionalidade real de
-// cancelamento quanto para testar a experiência free de novo).
+
 function cancelarAssinaturaPremium() {
     if (!confirm('Cancelar sua assinatura Premium e voltar ao plano gratuito?')) return;
     usuarioPremiumAtivo = false;
@@ -233,9 +190,7 @@ function gerarCalendarioSemana() {
     }
 }
 
-// Card "Evolução semanal" da Home Premium: os checks seguem o calendário
-// real da semana atual (segunda a domingo), marcando como concluído todo
-// dia até hoje (inclusive).
+
 function gerarEvolucaoSemanal() {
     const container = document.getElementById('evolution-week-container');
     const textoStreak = document.getElementById('evolution-streak-text');
@@ -413,9 +368,7 @@ function entrarNoModoPremium() {
     navegarPara('screen-home-premium');
 }
 
-// Diário e Metas ganham o fundo verde (tema escuro) assim que a pessoa
-// assina o Vittalis Premium; usuárias do plano gratuito continuam vendo
-// essas telas no tema claro original.
+
 function aplicarTemaPremiumNasTelas() {
     ['screen-diario', 'screen-metas'].forEach(id => {
         const tela = document.getElementById(id);
@@ -423,8 +376,7 @@ function aplicarTemaPremiumNasTelas() {
     });
 }
 
-// O ícone de medalha no menu inferior leva para a assinatura enquanto a
-// pessoa é free; depois de assinar, passa a abrir o Índice Viva direto.
+
 function abrirIndiceOuAssinatura(elemento) {
     navegarPara(usuarioPremiumAtivo ? 'screen-evolucao' : 'screen-assinatura', elemento);
 }
@@ -454,7 +406,7 @@ function concluirAssinaturaComSucesso() { entrarNoModoPremium(); navegarPara('sc
 // RECOMENDAÇÕES PERSONALIZADAS (dados opcionais + cálculos)
 // ==========================================
 
-// Faixa de mL por kg varia com a idade; adultos ficam em 35 mL/kg.
+
 function calcularAguaPersonalizada(dados) {
     if (!dados || !dados.peso) return null;
     let mlPorKg = 35;
@@ -463,7 +415,7 @@ function calcularAguaPersonalizada(dados) {
     return Math.round(((dados.peso * mlPorKg) / 1000) * 10) / 10;
 }
 
-// TMB pela fórmula de Mifflin-St Jeor + fator de atividade = gasto calórico estimado (TDEE).
+
 function calcularTMBeTDEE(dados) {
     if (!dados || !dados.peso || !dados.altura || !dados.idade || !dados.sexo) return null;
     const base = 10 * dados.peso + 6.25 * dados.altura - 5 * dados.idade;
@@ -511,10 +463,7 @@ function salvarDadosPessoais() {
     }
 }
 
-// Cria (ou atualiza, se já existir) metas na lista "Minhas Metas" com base nos
-// dados pessoais informados — sem precisar abrir o modal "Criar nova meta".
-// Cada meta calculada tem um "origem" único, então salvar os dados de novo
-// (ex.: peso mudou) atualiza a mesma meta em vez de duplicar.
+
 function aplicarMetasPersonalizadasAutomaticas(dados) {
     let metasGeradas = 0;
 
@@ -540,8 +489,6 @@ function aplicarMetasPersonalizadasAutomaticas(dados) {
     return metasGeradas;
 }
 
-// Cria uma meta com esse "origem" se não existir ainda, ou atualiza os dados
-// (título/alvo) de uma já existente — preservando o progresso atual dela.
 function upsertMetaPorOrigem(origem, dadosMeta) {
     let metas = parseJSONSeguro(localStorage.getItem('vittalis_metas_temp')) || [];
     const existente = metas.find(m => m.origem === origem);
@@ -612,8 +559,7 @@ function adicionarMetaSugerida(indice) {
     const alvo = (sugestao.tipo === 'agua' && aguaPersonalizada) ? aguaPersonalizada : sugestao.alvoBase;
     const dadosDaMeta = { titulo: sugestao.titulo, alvo: alvo, unidade: sugestao.unidade, cor: sugestao.cor, icon: sugestao.icon };
 
-    // A meta de água usa a mesma "origem" da meta calculada automaticamente
-    // em Recomendações Personalizadas, então nunca duplica — só atualiza.
+  
     let sucesso;
     if (sugestao.tipo === 'agua') {
         sucesso = upsertMetaPorOrigem('agua_personalizada', dadosDaMeta);
@@ -635,9 +581,7 @@ function carregarMetasSalvas() {
     const lista = document.getElementById('lista-metas');
     if (!lista) return;
 
-    // A tela de Metas começa vazia: nenhuma meta de exemplo é criada
-    // automaticamente. A pessoa só vê algo aqui depois de criar sua
-    // própria meta em "+ Criar nova meta".
+    
     const metasSalvas = parseJSONSeguro(localStorage.getItem('vittalis_metas_temp')) || [];
     
     const abaAtiva = document.querySelector('.toggle-tabs .tab.active');
@@ -659,7 +603,7 @@ function carregarMetasSalvas() {
     metasFiltradas.forEach((m) => {
         const li = document.createElement('li');
         li.className = `goal-item ${m.concluida ? 'concluida' : ''}`;
-        // Guarda contra divisão por zero se a meta tiver alvo 0
+        
         const porcentagem = (m.alvo > 0 ? Math.min((m.atual / m.alvo) * 100, 100) : 0) + '%';
         const tituloSeguro = escapeHTML(m.titulo);
         const unidadeSegura = escapeHTML(m.unidade);
@@ -837,7 +781,7 @@ function selecionarHumor(card, humorStr) {
     localStorage.setItem('vittalis_diario_temp', JSON.stringify(diarioData));
     
     adicionarPontosScore(2);
-    // Atualiza Insight
+
     atualizarInsight('Humor Registrado', 2);
 }
 
@@ -962,12 +906,7 @@ function carregarCampoSalvo(id) {
     if (salvo && document.getElementById(id)) document.getElementById(id).value = salvo;
 }
 
-// Preenche o formulário "Sou Cliente Unimed" (carteirinha, nascimento, CPF).
-// Prioridade: 1) o que a própria pessoa já digitou nesse formulário
-// (rascunho salvo em vittalis_draft_*); 2) se ainda não tiver rascunho,
-// os mesmos dados que ela já informou em "Meu Perfil", já que é a mesma
-// pessoa e não faz sentido pedir de novo. Chamada tanto no carregamento
-// da página quanto sempre que a pessoa navega para essa tela.
+
 function carregarCamposValidacaoUnimed() {
     const perfil = parseJSONSeguro(localStorage.getItem('vittalis_perfil'));
     const campos = [
@@ -991,10 +930,10 @@ function carregarCamposValidacaoUnimed() {
 // MÁSCARAS DE INPUT (RG E CPF)
 // ==========================================
 function mascaraCPF(input) {
-    let v = input.value.replace(/\D/g, ""); // Remove tudo o que não é dígito
-    if (v.length > 11) v = v.substring(0, 11); // Limita a 11 dígitos
+    let v = input.value.replace(/\D/g, ""); 
+    if (v.length > 11) v = v.substring(0, 11); 
     
-    // Coloca os pontos e o traço
+    
     v = v.replace(/(\d{3})(\d)/, "$1.$2");
     v = v.replace(/(\d{3})(\d)/, "$1.$2");
     v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
@@ -1003,11 +942,11 @@ function mascaraCPF(input) {
 }
 
 function mascaraRG(input) {
-    // Remove o que não é dígito ou a letra X (maiúscula ou minúscula)
-    let v = input.value.replace(/[^0-9Xx]/g, ""); 
-    if (v.length > 9) v = v.substring(0, 9); // RG padrão SP tem 9 dígitos
     
-    // Aplica a máscara: 00.000.000-0
+    let v = input.value.replace(/[^0-9Xx]/g, ""); 
+    if (v.length > 9) v = v.substring(0, 9); 
+    
+    
     if (v.length > 2) v = v.substring(0,2) + "." + v.substring(2);
     if (v.length > 6) v = v.substring(0,6) + "." + v.substring(6);
     if (v.length > 10) v = v.substring(0,10) + "-" + v.substring(10);
@@ -1021,7 +960,7 @@ async function gerarRecomendacaoIA() {
     if (btn) btn.innerText = "Gerando...";
     atualizarPreviewRecomendacaoIA("Analisando seus dados de hoje...");
 
-    // Coleta os dados do diário atual
+   
     const diarioData = parseJSONSeguro(localStorage.getItem('vittalis_diario_temp')) || {};
     const dadosHoje = diarioData[diaDiarioSelecionado] || { humor: 'normal', sono: 0, atividade: 0, agua: 0 };
 
@@ -1036,7 +975,7 @@ async function gerarRecomendacaoIA() {
         
         const data = await response.json();
 
-        // Formata a resposta recebida do Python (mensagem, risco e array de recomendações)
+        
         if (data.mensagem) {
             const textoCompleto = `${data.mensagem}\n\nRisco geral: ${data.nivel_risco.toUpperCase()}\n\nRecomendações práticas:\n- ${data.recomendacoes.join('\n- ')}`;
             salvarRecomendacaoIA(textoCompleto);
@@ -1051,12 +990,11 @@ async function gerarRecomendacaoIA() {
     }
 }
 function ativarPlanoBasico() {
-    // Grava no sistema que a escolha é o Plano Básico, usando a MESMA chave
-    // que o resto do app usa para checar o status Premium
+   
     localStorage.removeItem('vittalis_premium');
     usuarioPremiumAtivo = false;
 
-    // Atualiza o tema (fundo escuro/verde) de todas as telas que dependem do plano
+    
     aplicarTemaPremiumNasTelas();
 
     navegarPara('screen-diario');

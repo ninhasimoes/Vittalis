@@ -13,7 +13,6 @@ from pydantic import BaseModel, Field
 # ==========================================
 load_dotenv()
 client = genai.Client()
-# Atualizado para o modelo correto compatível
 MODELO_ESCOLHIDO = "gemini-3.6-flash"
 
 
