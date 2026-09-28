@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Vittalis: acompanhe seu Índice Viva, registre hábitos no diário, cumpra metas de saúde e desbloqueie recompensas em parceria com a Unimed.">
+    <title>Vittalis - App de Saúde e Bem-estar Unimed</title>
+    <link rel="icon" href="assets/icone.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0"
+        rel="stylesheet" />
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- 1. HOME PADRÃO -->
+        <section id="screen-home" class="screen active fade-in">
+            <header class="app-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="user-welcome">
+                    <div class="brand-title">unimed</div>
+                    <h1>Olá<span id="user-name-home"></span> 👋</h1>
+                    <p>Como podemos te ajudar hoje?</p>
+                </div>
+                <div class="avatar-circle avatar-light" role="button" tabindex="0" aria-label="Meu perfil"
+                    onclick="navegarPara('screen-perfil')">
+                    <span class="material-symbols-rounded" aria-hidden="true">person</span>
+                </div>
+            </header>
+
+            <div class="quick-actions">
+                <button type="button" class="action-btn"
+                    onclick="abrirModalGenerico('Consultas', 'Você tem 1 consulta agendada para 28/06 com Dr. Carlos.')"><span
+                        class="material-symbols-rounded"
+                        aria-hidden="true">calendar_month</span><span>Consultas</span></button>
+                <button type="button" class="action-btn"
+                    onclick="abrirModalGenerico('Exames', 'Exame de Sangue - Disponível para download.')"><span
+                        class="material-symbols-rounded"
+                        aria-hidden="true">medical_information</span><span>Exames</span></button>
+                <button type="button" class="action-btn"
+                    onclick="abrirModalGenerico('Carteirinha', 'Carteirinha Digital Unimed - Válida até 2028.')"><span
+                        class="material-symbols-rounded"
+                        aria-hidden="true">badge</span><span>Carteirinha</span></button>
+                <button type="button" class="action-btn"
+                    onclick="abrirModalGenerico('Autorizações', 'Nenhuma solicitação pendente no momento.')"><span
+                        class="material-symbols-rounded"
+                        aria-hidden="true">chat_bubble</span><span>Autorizações</span></button>
+            </div>
+            <div class="banner-vittalis" role="button" tabindex="0" onclick="navegarPara('screen-intro')">
+                <img src="assets/icone-transparente.png" alt="" aria-hidden="true" class="banner-icon-watermark">
+                <div class="banner-text">
+                    <h2>Conheça sua saúde com o Índice Viva</h2>
+                    <p>Descubra trilhas personalizadas e cuide de você todos os dias.</p>
+                </div>
+                <button type="button" class="btn-banner"
+                    onclick="event.stopPropagation(); navegarPara('screen-intro');">Conhecer Vittalis</button>
+            </div>
+            <div class="section-title-row">
+                <h3>Para você</h3>
+                <span class="see-all" role="button" tabindex="0"
+                    onclick="abrirModalGenerico('Atendimentos', 'Histórico completo carregado.')">Ver todos</span>
+            </div>
+            <div class="cards-row" id="home-cards-container">
+                <div class="mini-card" role="button" tabindex="0"
+                    onclick="abrirModalGenerico('Consulta', '28 JUN - 14:30 | Clínico Geral')"><span
+                        class="card-label">Próxima consulta</span><strong>28 JUN - 14:30</strong><span
+                        class="card-sub text-green">Clínico geral</span></div>
+                <div class="mini-card" role="button" tabindex="0"
+                    onclick="abrirModalGenerico('Exame', 'Laudo liberado sem alterações.')"><span
+                        class="card-label">Resultado de exame</span><strong class="text-dark">DISPONÍVEL</strong><span
+                        class="card-sub text-green">Ver resultado</span></div>
+            </div>
+        </section>
+
+        <!-- 2. HOME PREMIUM -->
+        <section id="screen-home-premium" class="screen dark-theme fade-in">
+            <header class="app-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="user-welcome">
+                    <h1 style="color: white;">Olá<span id="user-name-premium"></span> 👋</h1>
+                    <p style="color: #9ca3af;">Como você está hoje?</p>
+                </div>
+                <div class="avatar-circle" role="button" tabindex="0" aria-label="Meu perfil"
+                    onclick="navegarPara('screen-perfil')">
+                    <span class="material-symbols-rounded" style="font-size: 32px; color: white;"
+                        aria-hidden="true">person</span>
+                </div>
+            </header>
+            <div class="summary-card-green" role="button" tabindex="0" onclick="navegarPara('screen-evolucao')">
+                <div class="summary-content">
+                    <div class="score-circle">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" />
+                            <path class="circle" stroke-dasharray="74, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" />
+                        </svg>
+                        <div class="score-text">
+                            <strong style="color: black;" id="user-viva-score">0</strong>
+                            <span style="color: #333;">de 1000</span>
+                        </div>
+                    </div>
+                    <div class="summary-message">
+                        <h4 style="color: black;">Bom dia!</h4>
+                        <p style="color: #333; font-size: 12px;">Você está no caminho certo</p><span
+                            class="link-detalhes">Ver detalhes &gt;</span>
+                    </div>
+                </div>
+            </div>
+            <div class="evolution-card">
+                <div class="evolution-header">
+                    <div><strong>Evolução semanal</strong>
+                        <p class="text-green" id="evolution-streak-text" style="font-size: 12px;">Carregando...</p>
+                    </div><span class="material-symbols-rounded" style="color: #f97316; font-size: 28px;"
+                        aria-hidden="true">local_fire_department</span>
+                </div>
+                <div class="week-days-row" id="evolution-week-container"></div>
+                <span class="link-edit-metas" role="button" tabindex="0" onclick="navegarPara('screen-metas')">+ Editar
+                    metas</span>
+            </div>
+            <div class="ai-recommendation-card dark-mini">
+                <div class="ai-recommendation-header"
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div>
+                        <span class="material-symbols-rounded" aria-hidden="true">psychology</span>
+                        <strong>Recomendação da IA</strong>
+                    </div>
+                    <button id="btn-gerar-ia" type="button" class="btn-primary"
+                        style="padding: 6px 12px; font-size: 12px;" onclick="gerarRecomendacaoIA()">Gerar</button>
+                </div>
+
+                <p id="previewRecomendacaoIA" role="button" tabindex="0" class="ai-recommendation-preview"
+                    onclick="expandirRecomendacaoIA()">Clique em Gerar para receber sua recomendação personalizada a
+                    partir dos seus dados de saúde.</p>
+            </div>
+        </section>
+
+        <!-- 3. EVOLUÇÃO -->
+        <section id="screen-evolucao" class="screen dark-theme fade-in">
+            <header class="app-header-simple"
+                style="display: flex; justify-content: space-between; align-items: center;">
+                <h1 style="color: white; font-size: 20px;">Evolução do Índice Viva</h1>
+                <span class="material-symbols-rounded text-green" style="font-size: 24px; cursor: pointer;"
+                    role="button" tabindex="0" aria-label="Notificações"
+                    onclick="abrirModalGenerico('Notificações', 'Nenhuma nova notificação de saúde.')">notifications</span>
+            </header>
+
+            <div class="filter-pills">
+                <button type="button" id="btn-filter-7" class="pill active">7 dias</button>
+                <button type="button" id="btn-filter-30" class="pill">30 dias</button>
+                <button type="button" id="btn-filter-90" class="pill">90 dias</button>
+            </div>
+
+            <div class="chart-box">
+                <div class="chart-drawing-area">
+                    <div class="chart-tooltip" id="chart-current-score">0</div>
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                        <defs>
+                            <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="rgba(0,166,105,0.6)" />
+                                <stop offset="100%" stop-color="rgba(0,166,105,0.0)" />
+                            </linearGradient>
+                        </defs>
+                        <polygon id="chart-polygon" fill="url(#chart-grad)" points="" />
+                        <polyline id="chart-polyline" fill="none" stroke="#00A669" stroke-width="3"
+                            vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div class="chart-labels" id="chart-labels-container"></div>
+            </div>
+
+            <!-- Insight Inteligente -->
+            <div class="insight-card" role="button" tabindex="0"
+                onclick="abrirModalGenerico('Insights', 'Continue alimentando seu diário e batendo metas para subir de nível!')">
+                <span class="material-symbols-rounded text-green" style="font-size: 32px;"
+                    aria-hidden="true">auto_awesome</span>
+                <div><strong>Insight do Dia</strong>
+                    <p id="dynamic-insight-text">Sua constância ao bater metas impactou positivamente seu Índice Viva.
+                    </p>
+                </div>
+                <span class="material-symbols-rounded" style="color: white;" aria-hidden="true">chevron_right</span>
+            </div>
+
+            <div class="section-title-row" style="color: white; margin-top: 24px;">
+                <h3>Recompensas</h3>
+                <span class="see-all text-green" role="button" tabindex="0"
+                    onclick="abrirModalGenerico('Cupons', 'Você possui 2 cupons ativos na CuidaFarma.')">Ver todas
+                    &gt;</span>
+            </div>
+            <div class="cards-row" id="rewards-container">
+                <div class="mini-card dark-mini" role="button" tabindex="0"
+                    onclick="abrirModalGenerico('CuidaFarma', 'Cupom de R$ 25,00 resgatado com sucesso!')">
+                    <span style="font-size: 12px; color: #9ca3af;">CuidarFarma</span><strong
+                        style="color: white; font-size: 18px;">R$ 25,00</strong><span class="text-green"
+                        style="font-size: 11px;">Disponível</span>
+                </div>
+                <div class="mini-card dark-mini" role="button" tabindex="0"
+                    onclick="abrirModalGenerico('Vantagens', 'Descontos de até 40% em redes parceiras.')">
+                    <span style="font-size: 12px; color: #9ca3af;">Clube de vantagens</span><strong
+                        style="color: white; font-size: 14px;">Ver ofertas</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. CONHECER VITTALIS -->
+        <section id="screen-intro" class="screen fade-in">
+            <div class="intro-header text-center" style="margin-bottom: 24px;">
+                <img src="assets/logo.png"
+                    onerror="tratarErroImagemVittalis(this, ['Logo.png','LOGO.png','icone.png','Icone.png','ICONE.png'], 0)"
+                    alt="Logo Vittalis" class="vittalis-img-logo" style="height: 50px;">
+            </div>
+            <div class="intro-header">
+                <h2>Sua saúde, todos os dias.</h2>
+                <p>Acompanhe, evolua e conquiste uma vida com mais equilíbrio.</p>
+            </div>
+            <div style="text-align: center; margin-bottom: -4px;">
+                <img src="assets/mockup-indice-viva.png" alt="Mockup do Índice Viva em um celular, mostrando 742 pontos"
+                    style="max-width: 220px; width: 100%; border-radius: 24px 0px 0px;">
+            </div>
+            <div class="intro-card-list" style="  background-color: white;  box-shadow: 0px 4px 30px #00a6693c;;
+    padding: 1rem;
+    border-radius: 1rem;">
+                <div class="intro-item">
+                    <div class="circle-icon bg-green"><span class="material-symbols-rounded">favorite</span></div>
+                    <div><strong>Índice Viva</strong>
+                        <p>Calculado a partir do seu humor, sono e atividade física</p>
+                    </div>
+                </div>
+                <div class="intro-item">
+                    <div class="circle-icon bg-green"><span class="material-symbols-rounded">groups</span></div>
+                    <div><strong>Trilhas personalizadas</strong>
+                        <p>Recomendações geradas por IA, adaptadas ao seu perfil de saúde</p>
+                    </div>
+                </div>
+                <div class="intro-item">
+                    <div class="circle-icon bg-green"><span class="material-symbols-rounded">trophy</span></div>
+                    <div><strong>Recompensas exclusivas</strong>
+                        <p>Desconto na CuidaFarma e parceiros</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-fixed-actions">
+                <button type="button" class="btn-primary" onclick="iniciarQuiz()">Quero conhecer</button>
+                <button type="button" class="btn-text" onclick="navegarPara('screen-home')">Talvez depois</button>
+            </div>
+        </section>
+
+        <!-- 5. QUIZ -->
+        <section id="screen-quiz" class="screen fade-in">
+            <form id="form-quiz" onsubmit="event.preventDefault(); proximaPerguntaQuiz();">
+                <div class="quiz-header text-center" style="margin-bottom: 16px;">
+                    <img src="assets/icone-transparente.png"
+                        onerror="tratarErroImagemVittalis(this, ['Logo.png','LOGO.png','icone.png','Icone.png','ICONE.png'], 0)"
+                        alt="Logo Vittalis" class="vittalis-img-logo" style="height: 40px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+                        <h2 style="font-size: 20px; margin: 0;">Quiz rápido</h2>
+                        <span class="quiz-step" id="quiz-step-indicator">Pergunta 1 de 3</span>
+                    </div>
+                </div>
+                <p class="question-count" id="quiz-count-label">Etapa inicial</p>
+                <h3 class="question-title" id="quiz-question-title">Como você avalia sua qualidade de sono?</h3>
+                <div class="quiz-options" id="quiz-options-container"></div>
+                <div class="bottom-fixed-actions">
+                    <button type="submit" class="btn-primary">Próxima</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 6. RESULTADO PARCIAL -->
+        <section id="screen-resultado" class="screen text-center fade-in">
+            <div class="justify-center" style="margin-bottom: 16px; text-align: center;">
+                <img src="assets/logo.png"
+                    onerror="tratarErroImagemVittalis(this, ['Logo.png','LOGO.png','icone.png','Icone.png','ICONE.png'], 0)"
+                    alt="Logo Vittalis" class="vittalis-img-logo" style="height: 45px;">
+            </div>
+            <h2 style="margin-top: 10px;">Seu Índice Viva<br><span
+                    style="font-size: 16px; font-weight: normal;">(parcial)</span></h2>
+            <div class="score-circle-big">
+                <strong id="partial-score">0</strong>
+                <span>de 1000</span>
+            </div>
+            <h3>Você está no caminho certo!</h3>
+            <p class="text-green font-bold">Seu potencial de saúde pode ser ainda maior!</p>
+            <p class="desc-text">Assinando o Vittalis premium, você recebe insights personalizados e um plano de cuidado
+                ideal para você.</p>
+            <div class="bottom-fixed-actions">
+                <button type="button" class="btn-primary" onclick="navegarPara('screen-assinatura')">Assinar
+                    Premium</button>
+                <button type="button" class="btn-text" onclick="ativarPlanoBasico()">Ver plano Básico</button>
+            </div>
+        </section>
+
+        <!-- 7. METAS -->
+        <section id="screen-metas" class="screen fade-in">
+            <header class="app-header-simple">
+                <h1>Minhas Metas</h1>
+            </header>
+            <div class="toggle-tabs">
+                <button type="button" class="tab active" data-tab="ativas" onclick="mudarAbaMetas(this, 'ativas')">Em
+                    andamento</button>
+                <button type="button" class="tab" data-tab="concluidas"
+                    onclick="mudarAbaMetas(this, 'concluidas')">Concluídas</button>
+            </div>
+            <ul class="goals-list" id="lista-metas"></ul>
+            <button type="button" class="btn-primary-large" onclick="abrirModalMeta()" style="margin-top: 30px;">+ Criar
+                nova meta</button>
+            <div id="banner-completar-dados" class="dark-mini"
+                style="display: none; cursor: pointer; border-radius: 20px; padding: 16px; margin-top: 16px;"
+                role="button" tabindex="0" onclick="navegarPara('screen-recomendacoes-personalizadas')">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="material-symbols-rounded text-green" aria-hidden="true">monitor_weight</span>
+                    <div>
+                        <strong style="display: block; font-size: 14px; color: white;">Complete seu perfil</strong>
+                        <span style="font-size: 12px; color: var(--text-muted-dark);">Informe peso e altura para
+                            metas de água e calorias sob medida.</span>
+                    </div>
+                    <span class="material-symbols-rounded" style="margin-left: auto; color: white;"
+                        aria-hidden="true">chevron_right</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. DIÁRIO -->
+        <section id="screen-diario" class="screen fade-in">
+            <header class="app-header-simple">
+                <h1>Diário</h1>
+            </header>
+            <div class="week-selector" id="diary-week-selector"></div>
+            <p style="font-weight: 600; margin-bottom: 12px;">Como você está?</p>
+            <div class="mood-row" id="mood-selector">
+                <div class="mood-card" data-humor="muito_bem" role="button" tabindex="0"
+                    onclick="selecionarHumor(this, 'muito_bem')"><span class="material-symbols-rounded"
+                        aria-hidden="true">sentiment_very_satisfied</span><span>Muito bem</span></div>
+                <div class="mood-card active" data-humor="bom" role="button" tabindex="0"
+                    onclick="selecionarHumor(this, 'bom')"><span class="material-symbols-rounded"
+                        aria-hidden="true">sentiment_satisfied</span><span>Bom</span></div>
+                <div class="mood-card" data-humor="normal" role="button" tabindex="0"
+                    onclick="selecionarHumor(this, 'normal')"><span class="material-symbols-rounded"
+                        aria-hidden="true">sentiment_neutral</span><span>Normal</span></div>
+                <div class="mood-card" data-humor="mal" role="button" tabindex="0"
+                    onclick="selecionarHumor(this, 'mal')"><span class="material-symbols-rounded"
+                        aria-hidden="true">sentiment_dissatisfied</span><span>Mal</span></div>
+            </div>
+            <div class="diary-summary-box" id="diary-metrics-container">
+                <div class="diary-row editable-row" role="button" tabindex="0"
+                    onclick="abrirModalEdicaoDiario('sono', 'Tempo de Sono', 'horas', 'bedtime')">
+                    <span><span class="material-symbols-rounded" aria-hidden="true">bedtime</span> Sono</span> <strong
+                        id="metric-sono">0h 0min</strong>
+                </div>
+                <div class="diary-row editable-row" role="button" tabindex="0"
+                    onclick="abrirModalEdicaoDiario('atividade', 'Atividade Física', 'min', 'directions_run')">
+                    <span><span class="material-symbols-rounded" aria-hidden="true">directions_run</span> Atividade
+                        física</span> <strong id="metric-atividade">0min</strong>
+                </div>
+                <div class="diary-row editable-row" role="button" tabindex="0"
+                    onclick="abrirModalEdicaoDiario('agua', 'Consumo de Água', 'copos', 'water_drop')">
+                    <span><span class="material-symbols-rounded" aria-hidden="true">water_drop</span> Água</span>
+                    <strong id="metric-agua">0 copos</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. ASSINATURA -->
+        <section id="screen-assinatura" class="screen text-center dark-theme fade-in" style="padding-top: 40px;">
+            <div class="justify-center" style="margin-bottom: 16px; text-align: center;">
+                <img src="assets/logo-transparente.png"
+                    onerror="tratarErroImagemVittalis(this, ['logo-transparente.png','Logo-transparente.png','logo.png'], 0)"
+                    alt="Ícone Vittalis" class="vittalis-img-logo" style="height: 55px;">
+            </div>
+            <div style="font-weight: bold; font-size: 24px; color: white;">Vittalis <span
+                    style="color: #c084fc;">PREMIUM</span></div>
+            <div class="price-badge">R$ 25/mês</div>
+            <ul class="benefits-list" style="margin-top: 10px;">
+                <li><span class="material-symbols-rounded">check</span> Índice Viva completo com análise detalhada</li>
+                <li><span class="material-symbols-rounded">check</span> Trilhas personalizadas 100% para você</li>
+                <li><span class="material-symbols-rounded">check</span> Acompanhamento diário e insights inteligentes
+                </li>
+                <li><span class="material-symbols-rounded">check</span> Recompensas exclusivas CuidaFarma e parceiros
+                </li>
+                <li><span class="material-symbols-rounded">check</span> Gratuidade para conveniados Unimed</li>
+            </ul>
+            <div class="bottom-fixed-actions" style="position: relative; margin-top: 30px;">
+                <button type="button" class="btn-primary" onclick="navegarPara('screen-planos')">ASSINAR AGORA</button>
+                <button type="button" class="btn-text" style="color: #38bdf8;"
+                    onclick="navegarPara('screen-home')">Talvez depois</button>
+            </div>
+        </section>
+
+        <!-- 10. ESCOLHA DE PLANO -->
+        <section id="screen-planos" class="screen dark-theme fade-in">
+            <button type="button" class="btn-back" onclick="navegarPara('screen-assinatura')"><span
+                    class="material-symbols-rounded">arrow_back</span></button>
+            <div class="steps-indicator"><span class="step active"></span><span class="step"></span><span
+                    class="step"></span></div>
+            <h2 style="text-align: center; margin-bottom: 8px; color: white;">Como Deseja Assinar?</h2>
+            <p style="text-align: center; color: #9ca3af; font-size: 14px; margin-bottom: 24px;">Escolha a opção que
+                melhor se encaixa em você.</p>
+            <div class="plan-card" role="button" tabindex="0" onclick="navegarPara('screen-validar-unimed')">
+                <div class="plan-info"><span class="badge-num">1</span>
+                    <div><strong style="color: #4ade80;">Sou cliente Unimed</strong>
+                        <p style="color: #9ca3af; font-size: 12px;">Acesso gratuito para beneficiários Unimed.</p><span
+                            class="text-green font-bold">Gratuito</span>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded" style="color: #9ca3af;" aria-hidden="true">chevron_right</span>
+            </div>
+            <div class="plan-card" role="button" tabindex="0" onclick="navegarPara('screen-pagamento')">
+                <div class="plan-info"><span class="badge-num">2</span>
+                    <div><strong style="color: #c084fc;">Apenas utilizar Vittalis</strong>
+                        <p style="color: #9ca3af; font-size: 12px;">Acesso premium completo sem vínculo com Unimed.</p>
+                        <span class="text-purple font-bold">R$ 25/mês</span>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded" style="color: #9ca3af;" aria-hidden="true">chevron_right</span>
+            </div>
+        </section>
+
+        <!-- 11. VALIDAR UNIMED -->
+        <section id="screen-validar-unimed" class="screen dark-theme fade-in">
+            <button type="button" class="btn-back" onclick="navegarPara('screen-planos')"><span
+                    class="material-symbols-rounded">arrow_back</span></button>
+            <h2 style="color: #4ade80; font-size: 22px; margin-bottom: 4px;">Sou Cliente Unimed</h2>
+            <p style="color: white; font-size: 18px; font-weight: bold; margin-top: 16px;">Vamos validar seu vínculo</p>
+            <form id="form-validar-unimed" onsubmit="event.preventDefault(); validarEConcluirUnimed();">
+                <div class="input-group-dark">
+                    <label for="valCarteirinha">Número da carteirinha</label>
+                    <input type="text" id="valCarteirinha" name="numero_carteirinha" oninput="salvarCampo('valCarteirinha')" required>
+                </div>
+                <div class="input-group-dark">
+                    <label for="valNasc">Data de nascimento</label>
+                    <input type="date" id="valNasc" name="data_nascimento" oninput="salvarCampo('valNasc')" required>
+                </div>
+                <div class="input-group-dark">
+                    <label for="valCpf">CPF</label>
+                    <input type="text" id="valCpf" name="cpf" placeholder="000.000.000-00" maxlength="14"
+                        oninput="mascaraCPF(this); salvarCampo('valCpf')" required>
+                </div>
+                <div class="bottom-fixed-actions" style="margin-top: 40px;">
+                    <button type="submit" class="btn-primary">Continuar</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 12. PAGAMENTO -->
+        <section id="screen-pagamento" class="screen dark-theme fade-in">
+            <button type="button" class="btn-back" onclick="navegarPara('screen-planos')"><span
+                    class="material-symbols-rounded">arrow_back</span></button>
+            <h2 style="color: #c084fc; font-size: 20px;">Apenas Utilizar Vittalis</h2>
+            <p style="color: white; font-size: 18px; font-weight: bold; margin-top: 16px;">Tenha acesso completo</p>
+            <form id="form-pagamento" onsubmit="event.preventDefault(); concluirAssinaturaComSucesso();">
+                <div class="input-group-dark" style="margin-top: 20px;">
+                    <label for="formaPagto">Escolha a forma de pagamento</label>
+                    <select id="formaPagto" name="metodo_pagamento" required>
+                        <option value="" disabled selected>Selecione uma opção</option>
+                        <option value="cartao_credito">Cartão de crédito</option>
+                        <option value="pix">Pix</option>
+                        <option value="boleto">Boleto bancário</option>
+                    </select>
+                </div>
+                <div class="bottom-fixed-actions" style="margin-top: 50px;">
+                    <button type="submit" class="btn-purple">Concluir Pagamento</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 13. SUCESSO (TOTALMENTE REDESENHADO COM O VISUAL NOVO) -->
+        <section id="screen-sucesso" class="screen dark-theme fade-in" style="padding-top: 24px; text-align: center;">
+            <div style="text-align: left; margin-bottom: 20px;">
+                <button type="button" class="btn-back" onclick="navegarPara('screen-planos')"><span
+                        class="material-symbols-rounded">arrow_back</span></button>
+            </div>
+
+            <!-- Círculo de Sucesso e Confetes -->
+            <div class="success-icon-wrapper">
+                <div class="confetti c1"></div>
+                <div class="confetti c2"></div>
+                <div class="confetti c3"></div>
+                <div class="confetti c4"></div>
+                <div class="confetti c5"></div>
+                <div class="success-icon-circle-filled">
+                    <span class="material-symbols-rounded" style="font-size: 44px; color: white;">check</span>
+                </div>
+            </div>
+
+            <h2 style="color: white; font-size: 24px; margin-bottom: 4px;">Feito com sucesso!</h2>
+            <p style="color: #9ca3af; font-size: 13px; margin-bottom: 8px;">Você agora tem acesso ao</p>
+
+            <!-- Vittalis Premium + Logo Reduzida -->
+            <div class="premium-logo-text">
+                <strong style="color: #c084fc; font-size: 22px;">Vittalis Premium</strong>
+                <img src="assets/logo-transparente.png"
+                    onerror="tratarErroImagemVittalis(this, ['logo-transparente.png','Logo-transparente.png','logo.png'], 0)"
+                    alt="Ícone Vittalis" style="height: 28px;">
+            </div>
+
+            <!-- Card: Aproveite todos os Benefícios -->
+            <div class="success-benefit-card">
+                <div class="crown-icon-box">
+                    <span class="material-symbols-rounded"
+                        style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                </div>
+                <div>
+                    <strong>Aproveite todos os benefícios</strong>
+                    <p>Explore recursos exclusivos e tenha um experiência completa.</p>
+                </div>
+            </div>
+
+            <!-- Card: O que você pode fazer agora -->
+            <div class="success-features-card">
+                <strong>O que você pode fazer agora:</strong>
+                <ul class="success-features-list">
+                    <li><span class="material-symbols-rounded"
+                            style="font-variation-settings: 'FILL' 0;">check_circle</span> Acompanha seu Índice viva
+                    </li>
+                    <li><span class="material-symbols-rounded"
+                            style="font-variation-settings: 'FILL' 0;">check_circle</span> Acesse trilhas personalizadas
+                    </li>
+                    <li><span class="material-symbols-rounded"
+                            style="font-variation-settings: 'FILL' 0;">check_circle</span> Receba insights e
+                        recomendações</li>
+                    <li><span class="material-symbols-rounded"
+                            style="font-variation-settings: 'FILL' 0;">check_circle</span> Ganhe recompensas exclusivas
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-fixed-actions" style="margin-top: 40px; position: relative;">
+                <button type="button" class="btn-purple" onclick="entrarNoModoPremium()">Explorar o Vittalis
+                    Premium</button>
+                <span class="link-edit-metas" role="button" tabindex="0"
+                    style="display: block; text-align: center; margin-top: 16px;"
+                    onclick="navegarPara('screen-recomendacoes-personalizadas')">Personalizar minhas
+                    recomendações</span>
+            </div>
+        </section>
+
+        <!-- RECOMENDAÇÕES PERSONALIZADAS (dados opcionais para calcular metas) -->
+        <section id="screen-recomendacoes-personalizadas" class="screen dark-theme fade-in">
+            <button type="button" class="btn-back" onclick="irParaHomeCorreta()"><span class="material-symbols-rounded"
+                    aria-hidden="true">arrow_back</span></button>
+            <h2 style="color: white; font-size: 24px; margin-bottom: 4px;">Recomendações Personalizadas</h2>
+            <p style="color: var(--text-muted-dark); font-size: 13px; margin-bottom: 20px; line-height: 1.5;">
+                Esses dados servem só para calcular suas metas de água e alimentação de um jeito mais próximo da sua
+                realidade. É totalmente opcional — pode pular e continuar usando o Vittalis normalmente.
+            </p>
+
+            <div class="dark-mini" style="border-radius: 16px; padding: 16px; margin-bottom: 16px;">
+                <strong style="display: block; margin-bottom: 8px;">Como calculamos sua meta de água</strong>
+                <p style="font-size: 12px; color: var(--text-muted-dark); line-height: 1.5;">Multiplicamos seu peso por
+                    uma quantidade de mL por quilo, que varia um pouco com a idade, para chegar numa meta diária de
+                    água. Em dias quentes ou de treino, vale somar de 500 mL a 1 L extra por hora de atividade.</p>
+            </div>
+            <div class="dark-mini" style="border-radius: 16px; padding: 16px; margin-bottom: 20px;">
+                <strong style="display: block; margin-bottom: 8px;">Como estimamos sua necessidade calórica</strong>
+                <p style="font-size: 12px; color: var(--text-muted-dark); line-height: 1.5;">Com peso, altura, idade e
+                    sexo, estimamos sua taxa metabólica basal; combinada com seu nível de atividade física, isso dá o
+                    gasto calórico total do dia — a referência para montar refeições equilibradas.</p>
+            </div>
+
+            <form id="form-dados-pessoais" onsubmit="event.preventDefault(); salvarDadosPessoais();">
+                <div style="display: flex; gap: 12px;">
+                    <div style="flex: 1;"><label for="dpPeso"
+                            style="font-size: 13px; font-weight: 600; color: var(--text-muted-dark);">Peso
+                            (kg)</label><input type="number" id="dpPeso" class="input-field" min="1" step="0.1"
+                            placeholder="Opcional"></div>
+                    <div style="flex: 1;"><label for="dpAltura"
+                            style="font-size: 13px; font-weight: 600; color: var(--text-muted-dark);">Altura
+                            (cm)</label><input type="number" id="dpAltura" class="input-field" min="1" step="1"
+                            placeholder="Opcional"></div>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 12px;">
+                    <div style="flex: 1;"><label for="dpIdade"
+                            style="font-size: 13px; font-weight: 600; color: var(--text-muted-dark);">Idade</label><input
+                            type="number" id="dpIdade" class="input-field" min="1" step="1" placeholder="Opcional">
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="dpSexo"
+                            style="font-size: 13px; font-weight: 600; color: var(--text-muted-dark);">Sexo
+                            biológico</label>
+                        <select id="dpSexo" class="input-field">
+                            <option value="">Prefiro não informar</option>
+                            <option value="feminino">Feminino</option>
+                            <option value="masculino">Masculino</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-top: 12px;">
+                    <label for="dpAtividade"
+                        style="font-size: 13px; font-weight: 600; color: var(--text-muted-dark);">Nível de atividade
+                        física</label>
+                    <select id="dpAtividade" class="input-field">
+                        <option value="sedentario">Sedentário</option>
+                        <option value="moderado" selected>Moderado</option>
+                        <option value="intenso">Intenso</option>
+                    </select>
+                </div>
+
+                <div id="resultado-calculo-pessoal" class="dark-mini"
+                    style="border-radius: 16px; padding: 16px; margin-top: 20px; display: none;">
+                    <strong style="display: block; margin-bottom: 6px;">Sua estimativa</strong>
+                    <p id="texto-resultado-agua" style="font-size: 13px; margin-bottom: 4px;"></p>
+                    <p id="texto-resultado-calorico" style="font-size: 13px;"></p>
+                </div>
+
+                <div class="bottom-fixed-actions" style="margin-top: 24px; position: relative;">
+                    <button type="submit" class="btn-primary">Salvar e calcular</button>
+                    <span class="link-edit-metas" role="button" tabindex="0"
+                        style="display: block; text-align: center; margin-top: 14px;"
+                        onclick="irParaHomeCorreta()">Pular por agora</span>
+                </div>
+            </form>
+        </section>
+
+        <!-- 14. PERFIL DO USUÁRIO -->
+        <section id="screen-perfil" class="screen dark-theme fade-in">
+            <button type="button" class="btn-back" onclick="irParaHomeCorreta()"><span
+                    class="material-symbols-rounded">arrow_back</span></button>
+            <h2 style="color: white; font-size: 24px; margin-bottom: 4px;">Meu Perfil</h2>
+            <p style="color: #9ca3af; font-size: 13px; margin-bottom: 24px;">Mantenha seus dados atualizados para uma
+                experiência completa.</p>
+
+            <form id="form-perfil" onsubmit="event.preventDefault(); salvarPerfil();">
+                <div class="input-group-dark">
+                    <label for="perfilNome">Nome Completo</label>
+                    <input type="text" id="perfilNome" name="nome" placeholder="Digite seu nome" required>
+                </div>
+                <div class="input-group-dark">
+                    <label for="perfilRG">RG</label>
+                    <input type="text" id="perfilRG" name="rg" placeholder="00.000.000-0" maxlength="12"
+                        oninput="mascaraRG(this)" required>
+                </div>
+                <div class="input-group-dark">
+                    <label for="perfilCPF">CPF</label>
+                    <input type="text" id="perfilCPF" name="cpf" placeholder="000.000.000-00" maxlength="14"
+                        oninput="mascaraCPF(this)" required>
+                </div>
+                <div class="input-group-dark">
+                    <label for="perfilNasc">Data de Nascimento</label>
+                    <input type="date" id="perfilNasc" name="data_nascimento" required>
+                </div>
+                <div class="input-group-dark">
+                    <label for="perfilCarteirinha">Número da Carteirinha Unimed</label>
+                    <input type="text" id="perfilCarteirinha" name="carteirinha" placeholder="Ex: 0000 0000 0000 0000"
+                        required>
+                </div>
+
+                <div class="bottom-fixed-actions" style="margin-top: 40px;">
+                    <button type="submit" class="btn-primary">Salvar Informações</button>
+                    <span class="link-edit-metas" role="button" tabindex="0"
+                        style="display: block; text-align: center; margin-top: 16px;"
+                        onclick="navegarPara('screen-recomendacoes-personalizadas')">Editar recomendações
+                        personalizadas</span>
+                    <span id="link-cancelar-premium" class="link-edit-metas" role="button" tabindex="0"
+                        style="display: none; text-align: center; margin-top: 12px; color: #ef4444;"
+                        onclick="cancelarAssinaturaPremium()">Cancelar assinatura Premium</span>
+                </div>
+            </form>
+        </section>
+
+        <!-- MODAIS DA APLICAÇÃO -->
+        <div id="modalGenerico" class="modal" onclick="fecharModalAoClicarFora(event, 'modalGenerico')">
+            <div class="modal-content text-center">
+                <h3 id="modalTitulo" style="margin-bottom: 12px; color: var(--vittalis-dark);">Aviso</h3>
+                <p id="modalMensagem" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;"></p>
+                <button type="button" class="btn-primary" onclick="fecharModalGenerico()">Entendido</button>
+            </div>
+        </div>
+
+        <div id="modalMeta" class="modal" onclick="fecharModalAoClicarFora(event, 'modalMeta')">
+            <div class="modal-content">
+                <h3 style="text-align: center; margin-bottom: 16px;">Criar Nova Meta</h3>
+
+                <p class="goal-suggestions-label">Sugestões rápidas</p>
+                <div class="goal-suggestions-list" id="goal-suggestions-list"></div>
+
+                <p class="goal-suggestions-label" style="margin-top: 16px;">Ou escreva a sua</p>
+                <form id="form-nova-meta" onsubmit="event.preventDefault(); adicionarMeta();">
+                    <label for="inputNomeMeta"
+                        style="font-size: 13px; font-weight: 600; color: var(--text-label-dark);">Qual o seu
+                        objetivo?</label>
+                    <input type="text" id="inputNomeMeta" name="nome_meta" class="input-field" required>
+                    <div style="display: flex; gap: 12px; margin-top: 12px;">
+                        <div style="flex: 1;"><label for="inputAlvoMeta"
+                                style="font-size: 13px; font-weight: 600; color: var(--text-label-dark);">Quantidade</label><input
+                                type="number" id="inputAlvoMeta" class="input-field" min="0.1" step="0.1" required>
+                        </div>
+                        <div style="flex: 1;"><label for="inputUnidadeMeta"
+                                style="font-size: 13px; font-weight: 600; color: var(--text-label-dark);">Unidade</label><input
+                                type="text" id="inputUnidadeMeta" class="input-field" required></div>
+                    </div>
+                    <div class="modal-buttons" style="margin-top: 24px;"><button type="submit" class="btn-primary"
+                            style="flex: 1;">Salvar Meta</button><button type="button" class="btn-text"
+                            onclick="fecharModalMeta()">Cancelar</button></div>
+                </form>
+            </div>
+        </div>
+
+        <div id="modalEditarMeta" class="modal" onclick="fecharModalAoClicarFora(event, 'modalEditarMeta')">
+            <div class="modal-content">
+                <h3 style="text-align: center; margin-bottom: 16px;">Editar Meta</h3>
+                <form id="form-editar-meta" onsubmit="event.preventDefault(); salvarEdicaoMeta();">
+                    <input type="hidden" id="editIdMeta">
+                    <label for="editNomeMeta"
+                        style="font-size: 13px; font-weight: 600; color: var(--text-label-dark);">Objetivo</label>
+                    <input type="text" id="editNomeMeta" class="input-field" required>
+                    <div style="display: flex; gap: 12px; margin-top: 12px;">
+                        <div style="flex: 1;"><label for="editAlvoMeta"
+                                style="font-size: 13px; font-weight: 600; color: var(--text-label-dark);">Quantidade</label><input
+                                type="number" id="editAlvoMeta" class="input-field" min="0.1" step="0.1" required></div>
+                        <div style="flex: 1;"><label for="editUnidadeMeta"
+                                style="font-size: 13px; font-weight: 600; color: var(--text-label-dark);">Unidade</label><input
+                                type="text" id="editUnidadeMeta" class="input-field" required></div>
+                    </div>
+                    <div class="modal-buttons"
+                        style="margin-top: 24px; display: flex; flex-direction: column; gap: 8px;">
+                        <button type="submit" class="btn-primary" style="width: 100%;">Salvar Alterações</button>
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                            <button type="button" class="btn-text" style="color: #ef4444;"
+                                onclick="excluirMeta()">Excluir Meta</button>
+                            <button type="button" class="btn-text"
+                                onclick="document.getElementById('modalEditarMeta').style.display='none'">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="modalProgresso" class="modal" onclick="fecharModalAoClicarFora(event, 'modalProgresso')">
+            <div class="modal-content text-center">
+                <h3 id="progresso-titulo-meta" style="margin-bottom: 4px; font-size: 20px;">Meta</h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Atualize o seu progresso da
+                    meta</p>
+                <form id="form-progresso" onsubmit="event.preventDefault(); salvarProgressoMeta();">
+                    <input type="hidden" id="progresso-id-meta">
+                    <input type="hidden" id="progresso-nome-meta">
+                    <div class="stepper-container">
+                        <button type="button" class="stepper-btn" onclick="alterarProgressoMeta(-1)">-</button>
+                        <div class="stepper-value-box">
+                            <input type="number" id="inputValorProgresso" class="stepper-input" step="0.5" required>
+                            <span id="progresso-unidade" class="stepper-unit"></span>
+                        </div>
+                        <button type="button" class="stepper-btn" onclick="alterarProgressoMeta(1)">+</button>
+                    </div>
+                    <div class="modal-buttons" style="margin-top: 30px;"><button type="submit" class="btn-primary"
+                            style="width: 100%;">Atualizar Meta</button></div>
+                </form>
+            </div>
+        </div>
+
+        <div id="modalEdicaoDiario" class="modal" onclick="fecharModalAoClicarFora(event, 'modalEdicaoDiario')">
+            <div class="modal-content text-center">
+                <h3 id="diario-titulo-modal" style="margin-bottom: 4px; font-size: 20px;">Editar</h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Atualize o seu registro
+                    diário</p>
+                <form id="form-diario" onsubmit="event.preventDefault(); salvarEdicaoDiario();">
+                    <input type="hidden" id="diario-tipo-metrica">
+                    <input type="hidden" id="diario-icone-metrica">
+                    <div class="stepper-container">
+                        <button type="button" class="stepper-btn" onclick="alterarValorDiario(-1)">-</button>
+                        <div class="stepper-value-box">
+                            <input type="number" id="inputValorDiario" class="stepper-input" step="0.5" required>
+                            <span id="diario-unidade" class="stepper-unit"></span>
+                        </div>
+                        <button type="button" class="stepper-btn" onclick="alterarValorDiario(1)">+</button>
+                    </div>
+                    <div class="modal-buttons" style="margin-top: 30px;"><button type="submit" class="btn-primary"
+                            style="width: 100%;">Salvar Registro</button></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- MENU INFERIOR -->
+        <nav class="bottom-nav" aria-label="Navegação principal">
+            <div class="nav-container">
+                <a href="#" class="nav-item active" aria-label="Início"
+                    onclick="irParaHomeCorreta(this); return false;"><span class="material-symbols-rounded"
+                        aria-hidden="true">home</span></a>
+                <a href="#" class="nav-item" aria-label="Nova meta"
+                    onclick="navegarPara('screen-metas', this); return false;"><span class="material-symbols-rounded"
+                        aria-hidden="true">add_circle</span></a>
+                <a href="#" class="nav-item" aria-label="Diário"
+                    onclick="navegarPara('screen-diario', this); return false;"><span class="material-symbols-rounded"
+                        aria-hidden="true">book</span></a>
+                <a href="#" class="nav-item premium" aria-label="Vittalis Premium"
+                    onclick="abrirIndiceOuAssinatura(this); return false;"><span class="material-symbols-rounded"
+                        aria-hidden="true">workspace_premium</span></a>
+            </div>
+        </nav>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
